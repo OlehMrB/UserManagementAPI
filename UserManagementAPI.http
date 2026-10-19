@@ -1,0 +1,117 @@
+@UserManagementAPI_HostAddress = http://localhost:5007
+@AuthToken = dev-secret-token
+
+GET {{UserManagementAPI_HostAddress}}/api/users
+Accept: application/json
+Authorization: Bearer {{AuthToken}}
+
+###
+
+GET {{UserManagementAPI_HostAddress}}/api/users/1
+Accept: application/json
+Authorization: Bearer {{AuthToken}}
+
+###
+
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane.doe@techhive.com",
+  "department": "HR"
+}
+
+###
+
+PUT {{UserManagementAPI_HostAddress}}/api/users/1
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "email": "jane.smith@techhive.com",
+  "department": "IT"
+}
+
+###
+
+DELETE {{UserManagementAPI_HostAddress}}/api/users/1
+Authorization: Bearer {{AuthToken}}
+
+### Edge case: non-existent ID returns 404
+GET {{UserManagementAPI_HostAddress}}/api/users/9999
+Accept: application/json
+Authorization: Bearer {{AuthToken}}
+
+### Edge case: empty/whitespace-only required fields return 400
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "firstName": "   ",
+  "lastName": "",
+  "email": "not-an-email",
+  "department": "IT"
+}
+
+### Edge case: missing Authorization header returns 401
+GET {{UserManagementAPI_HostAddress}}/api/users
+Accept: application/json
+
+### Edge case: invalid/garbage token returns 401
+GET {{UserManagementAPI_HostAddress}}/api/users
+Accept: application/json
+Authorization: Bearer not-the-right-token
+
+### Edge case: duplicate email returns 400
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "email": "jane.doe@techhive.com",
+  "department": "HR"
+}
+
+###
+
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "firstName": "Another",
+  "lastName": "Person",
+  "email": "JANE.DOE@techhive.com",
+  "department": "IT"
+}
+
+### Edge case: missing request body returns 400
+POST {{UserManagementAPI_HostAddress}}/api/users
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+### Edge case: update on non-existent ID returns 404
+PUT {{UserManagementAPI_HostAddress}}/api/users/9999
+Content-Type: application/json
+Authorization: Bearer {{AuthToken}}
+
+{
+  "firstName": "Ghost",
+  "lastName": "User",
+  "email": "ghost.user@techhive.com",
+  "department": "IT"
+}
+
+### Edge case: delete on non-existent ID returns 404
+DELETE {{UserManagementAPI_HostAddress}}/api/users/9999
+Authorization: Bearer {{AuthToken}}
+
+###
